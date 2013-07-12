@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aoe_MergedJsCssCdn>
+            <version>0.0.1</version>
+        </Aoe_MergedJsCssCdn>
+    </modules>
+    <global>
+        <models>
+            <aoe_mergedjscsscdn>
+                <class>Aoe_MergedJsCssCdn_Model</class>
+            </aoe_mergedjscsscdn>
+            <core>
+                <rewrite>
+                    <design_package>Aoe_MergedJsCssCdn_Model_Package</design_package>
+                </rewrite>
+            </core>
+        </models>
+        <helpers>
+            <aoe_mergedjscsscdn>
+                <class>Aoe_MergedJsCssCdn_Helper</class>
+            </aoe_mergedjscsscdn>
+        </helpers>
+    </global>
+</config>

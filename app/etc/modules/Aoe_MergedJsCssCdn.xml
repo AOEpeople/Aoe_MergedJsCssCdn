@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Aoe_MergedJsCssCdn>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Aoe_Cdn/>
+                <Aoe_JsCssTstamp/>
+                <Mage_Core/>
+            </depends>
+        </Aoe_MergedJsCssCdn>
+    </modules>
+</config>
