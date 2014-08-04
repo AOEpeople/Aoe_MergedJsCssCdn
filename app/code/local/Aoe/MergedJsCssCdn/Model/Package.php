@@ -25,13 +25,12 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
         $url = $helper->getCdnUrl($path);
         if (!$url && is_file($path)) {
             $url = $helper->storeInCdn($path);
-        }
-
-        if ($url) {
-            Mage::log(sprintf('Copied merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
-        } else {
-            $url = $nativeUrl;
-            Mage::log(sprintf('Did not copy merged %s file "%s" to cdn.', $type, $path), Zend_Log::ERR);
+            if ($url) {
+                Mage::log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
+            } else {
+                $url = $nativeUrl;
+                Mage::log(sprintf('Can not store merged %s file "%s" to cdn.', $type, $path), Zend_Log::ERR);
+            }
         }
 
         return $url;
