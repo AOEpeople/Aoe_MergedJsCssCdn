@@ -21,10 +21,8 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
         /* @var $helper Aoe_Cdn_Helper_Data */
         $helper = Mage::helper('aoecdn');
         $path = $targetDir . DS . $this->getProtocolSpecificTargetFileName($targetFilename);;
-        // relative path
-        $relativePath = ltrim(str_replace(Mage::getBaseDir('media'), '', $path), DS);
 
-        $url = $helper->getCdnUrl($relativePath);
+        $url = $helper->getCdnUrl($path);
         if (!$url && is_file($path)) {
             $url = $helper->storeInCdn($path);
         }
