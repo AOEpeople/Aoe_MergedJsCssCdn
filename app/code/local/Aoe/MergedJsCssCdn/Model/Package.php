@@ -5,6 +5,14 @@
 class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
 {
     /**
+     * @return Aoe_Cdn_Helper_Data
+     */
+    protected function _getAoeCdnHelper()
+    {
+        return Mage::helper('aoecdn');
+    }
+
+    /**
      * Generate CDN url for merged file of given $type.
      * Upload file to CDN if it doesn't exist there yet
      *
@@ -18,13 +26,11 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
     {
         $nativeUrl = parent::generateMergedUrl($type, $files, $targetDir, $targetFilename);
 
-        /* @var $helper Aoe_Cdn_Helper_Data */
-        $helper = Mage::helper('aoecdn');
         $path = $targetDir . DS . $this->getProtocolSpecificTargetFileName($targetFilename);;
 
-        $url = $helper->getCdnUrl($path);
+        $url = $this->_getAoeCdnHelper()->getCdnUrl($path);
         if (!$url && is_file($path)) {
-            $url = $helper->storeInCdn($path);
+            $url = $this->_getAoeCdnHelper()->storeInCdn($path);
             if ($url) {
                 Mage::log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
             } else {
@@ -34,5 +40,18 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
         }
 
         return $url;
+    }
+
+    /**
+     * Remove all merged js/css files
+     *
+     * @return bool
+     */
+    public function cleanMergedJsCss()
+    {
+        $parentResult = parent::cleanMergedJsCss();
+        $cdnResult    = $this->_getAoeCdnHelper()->clearCssJsCache();
+
+        return $parentResult && $cdnResult;
     }
 }
