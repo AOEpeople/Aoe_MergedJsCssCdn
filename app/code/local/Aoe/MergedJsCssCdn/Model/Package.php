@@ -5,11 +5,11 @@
 class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
 {
     /**
-     * @return Aoe_Cdn_Helper_Data
+     * @return Aoe_AmazonCdn_Helper_Data
      */
-    protected function _getAoeCdnHelper()
+    protected function _getAoeAmazonCdnHelper()
     {
-        return Mage::helper('aoecdn');
+        return Mage::helper('aoe_amazoncdn');
     }
 
     /**
@@ -28,9 +28,9 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
 
         $path = $targetDir . DS . $this->getProtocolSpecificTargetFileName($targetFilename);;
 
-        $url = $this->_getAoeCdnHelper()->getCdnUrl($path);
+        $url = $this->_getAoeAmazonCdnHelper()->getCdnUrl($path);
         if (!$url && is_file($path)) {
-            $url = $this->_getAoeCdnHelper()->storeInCdn($path);
+            $url = $this->_getAoeAmazonCdnHelper()->storeInCdn($path);
             if ($url) {
                 Mage::log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
             } else {
@@ -50,7 +50,7 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
     public function cleanMergedJsCss()
     {
         $parentResult = parent::cleanMergedJsCss();
-        $cdnResult    = $this->_getAoeCdnHelper()->clearCssJsCache();
+        $cdnResult    = $this->_getAoeAmazonCdnHelper()->clearCssJsCache();
 
         return $parentResult && $cdnResult;
     }
