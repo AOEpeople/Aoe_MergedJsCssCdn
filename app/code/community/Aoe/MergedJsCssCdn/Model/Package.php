@@ -32,10 +32,10 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
         if (!$url && is_file($path)) {
             $url = $this->_getAoeAmazonCdnHelper()->storeInCdn($path);
             if ($url) {
-                Mage::log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
+                OnePica_ImageCdn_Helper_Data::log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
             } else {
                 $url = $nativeUrl;
-                Mage::log(sprintf('Can not store merged %s file "%s" to cdn.', $type, $path), Zend_Log::ERR);
+                OnePica_ImageCdn_Helper_Data::log(sprintf('Can not store merged %s file "%s" to cdn.', $type, $path), Zend_Log::ERR);
             }
         }
 
