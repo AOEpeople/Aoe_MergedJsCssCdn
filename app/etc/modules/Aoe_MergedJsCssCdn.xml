@@ -3,7 +3,7 @@
     <modules>
         <Aoe_MergedJsCssCdn>
             <active>true</active>
-            <codePool>local</codePool>
+            <codePool>community</codePool>
             <depends>
                 <Aoe_AmazonCdn/>
                 <Aoe_JsCssTstamp/>

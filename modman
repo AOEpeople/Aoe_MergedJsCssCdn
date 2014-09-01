@@ -1,2 +1,2 @@
 app/etc/modules/Aoe_MergedJsCssCdn.xml             app/etc/modules/Aoe_MergedJsCssCdn.xml
-app/code/local/Aoe/MergedJsCssCdn/                 app/code/local/Aoe/MergedJsCssCdn/
+app/code/community/Aoe/MergedJsCssCdn/                 app/code/community/Aoe/MergedJsCssCdn/
