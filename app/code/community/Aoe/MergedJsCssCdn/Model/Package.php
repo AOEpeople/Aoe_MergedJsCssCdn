@@ -2,6 +2,7 @@
 /**
  * @author Dmytro Zavalkin <dmytro.zavalkin@aoemedia.de>
  */
+
 class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
 {
     /**
@@ -26,20 +27,31 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
     {
         $nativeUrl = parent::generateMergedUrl($type, $files, $targetDir, $targetFilename);
 
-        $path = $targetDir . DS . $this->getProtocolSpecificTargetFileName($targetFilename);;
+        if ($this->_getAoeAmazonCdnHelper()->isConfigured()) {
+            $logger = $this->_getAoeAmazonCdnHelper()->getLogger();
 
-        $url = $this->_getAoeAmazonCdnHelper()->getCdnUrl($path);
-        if (!$url && is_file($path)) {
-            $url = $this->_getAoeAmazonCdnHelper()->storeInCdn($path);
-            if ($url) {
-                OnePica_ImageCdn_Helper_Data::log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $path, $url), Zend_Log::DEBUG);
-            } else {
-                $url = $nativeUrl;
-                OnePica_ImageCdn_Helper_Data::log(sprintf('Can not store merged %s file "%s" to cdn.', $type, $path), Zend_Log::ERR);
+            $fileName = $targetDir . DS . $this->getProtocolSpecificTargetFileName($targetFilename);
+            $url      = $nativeUrl;
+            $cdnUrl   = $this->_getAoeAmazonCdnHelper()->getCdnAdapter()->getUrl($fileName);
+            if ($this->_getAoeAmazonCdnHelper()->getCacheFacade()->get($fileName)) {
+                $url = $cdnUrl;
+            } elseif (is_file($fileName)) {
+                if ($this->_getAoeAmazonCdnHelper()->getCdnAdapter()->save($fileName, $fileName)) {
+                    $url = $cdnUrl;
+                    $logger->log(sprintf('Stored merged %s file "%s" to cdn. Url "%s"', $type, $fileName, $cdnUrl),
+                        Zend_Log::DEBUG
+                    );
+                } else {
+                    $logger->log(sprintf('Can not store merged %s file "%s" to cdn.', $type, $fileName),
+                        Zend_Log::ERR
+                    );
+                }
             }
-        }
 
-        return $url;
+            return $url;
+        } else {
+            return $nativeUrl;
+        }
     }
 
     /**
@@ -50,7 +62,10 @@ class Aoe_MergedJsCssCdn_Model_Package extends Aoe_JsCssTstamp_Model_Package
     public function cleanMergedJsCss()
     {
         $parentResult = parent::cleanMergedJsCss();
-        $cdnResult    = $this->_getAoeAmazonCdnHelper()->clearCssJsCache();
+        $cdnResult    = true;
+        if ($this->_getAoeAmazonCdnHelper()->isConfigured()) {
+            $cdnResult = $this->_getAoeAmazonCdnHelper()->getCdnAdapter()->clearCssJsCache();
+        }
 
         return $parentResult && $cdnResult;
     }
